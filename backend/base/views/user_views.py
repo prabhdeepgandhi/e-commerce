@@ -9,14 +9,13 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework import status
 
-from .models import Product
-from .products import products
-from .serializers import ProductSerializer, UserSerializer, UserSerializerWithToken
+from base.models import Product
+from base.products import products
+from base.serializers import ProductSerializer, UserSerializer, UserSerializerWithToken
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-# Create your views here.
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
@@ -32,27 +31,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
-@api_view(['GET'])
-def getRoutes(request):
-    routes=[
-        '/api/products/',
-        '/api/products/create/',
-        '/api/products/upload/',
-        '/api/products/<id>/reviews/',
-        '/api/products/top/',
-        '/api/products/<id>/',
-        '/api/products/delete/<id>/',
-        '/api/products/<update>/<id>',
-    ]
     
-    return Response(routes)
-
-@api_view(['GET'])
-def getRoutes1(request):
-    return JsonResponse('Hello', safe=False)
-
-
+    
 @api_view(['POST'])
 def register_user(request):
     data = request.data
@@ -84,16 +64,4 @@ def getUsers(request):
 def getUserProfile(request):
     user = request.user
     serializer = UserSerializer(user, many=False)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getProducts(request):
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def getProduct(request,pk):
-    products = Product.objects.get(_id=pk)
-    serializer = ProductSerializer(products, many=False)
     return Response(serializer.data)
